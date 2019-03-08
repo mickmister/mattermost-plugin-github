@@ -20,7 +20,6 @@ import (
 // copy appropriate for your types.
 type configuration struct {
 	GitHubOrg               string
-	Username                string
 	GitHubOAuthClientID     string
 	GitHubOAuthClientSecret string
 	WebhookSecret           string
@@ -49,10 +48,6 @@ func (c *configuration) IsValid() error {
 
 	if c.EncryptionKey == "" {
 		return fmt.Errorf("Must have an encryption key")
-	}
-
-	if c.Username == "" {
-		return fmt.Errorf("Need a user to make posts as")
 	}
 
 	return nil

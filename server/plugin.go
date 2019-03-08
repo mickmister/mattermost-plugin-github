@@ -33,6 +33,7 @@ const (
 	SETTING_REMINDERS       = "reminders"
 	SETTING_ON              = "on"
 	SETTING_OFF             = "off"
+	BOT_USER_KEY            = "bot"
 )
 
 type Plugin struct {
@@ -81,13 +82,29 @@ func (p *Plugin) OnActivate() error {
 		return err
 	}
 	p.API.RegisterCommand(getCommand())
-	user, err := p.API.GetUserByUsername(config.Username)
+
+	botIdBytes, err := p.API.KVGet(BOT_USER_KEY)
 	if err != nil {
-		mlog.Error(err.Error())
-		return fmt.Errorf("Unable to find user with configured username: %v", config.Username)
+		return err
 	}
 
-	p.BotUserID = user.Id
+	// Create our bot account if it hasn't been created
+	if botIdBytes == nil {
+		bot, err := p.API.CreateBot(&model.Bot{
+			Username:    "github",
+			DisplayName: "GitHub",
+			Description: "Created by the GitHub plugin.",
+		})
+		if err != nil {
+			p.API.LogError("Failed to create bot", "error", err)
+			return err
+		}
+		p.API.KVSet(BOT_USER_KEY, []byte(bot.UserId))
+		p.BotUserID = bot.UserId
+	} else {
+		p.BotUserID = string(botIdBytes)
+	}
+
 	return nil
 }
 
