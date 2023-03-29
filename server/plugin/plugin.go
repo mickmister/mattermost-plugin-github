@@ -57,7 +57,8 @@ const (
 )
 
 var (
-	Manifest model.Manifest = root.Manifest
+	Manifest          model.Manifest = root.Manifest
+	e2eOAuthServerURL                = ""
 )
 
 type Plugin struct {
@@ -512,6 +513,11 @@ func (p *Plugin) getOAuthConfig(privateAllowed bool) *oauth2.Config {
 	}
 
 	baseURL := config.getBaseURL()
+	testOauthServerURL := e2eOAuthServerURL
+	if testOauthServerURL != "" {
+		baseURL = testOauthServerURL + "/"
+	}
+
 	authURL, _ := url.Parse(baseURL)
 	tokenURL, _ := url.Parse(baseURL)
 
