@@ -1,8 +1,10 @@
 name: Detox E2E Tests PR
 
 on:
-  branches:
-    - "*"
+  push:
+    branches:    
+      - '**'
+      
 
 jobs:
 
