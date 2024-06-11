@@ -4,13 +4,12 @@ on:
   push:
     branches:    
       - '**'
-      
 
 jobs:
 
   run-ios-tests-on-pr:
     name: iOS Mobile Tests on PR
-    uses: mattermost/mattermost-mobile/.github/workflows/e2e-detox-template.yml
+    uses: mattermost/mattermost-mobile/.github/workflows/e2e-detox-template.yml@main
     # uses: ./.github/workflows/e2e-detox-template.yml
     with:
       run-ios-tests: true
